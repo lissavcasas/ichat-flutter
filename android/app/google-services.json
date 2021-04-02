@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "673528245777",
+    "project_id": "ichat-60a2e",
+    "storage_bucket": "ichat-60a2e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673528245777:android:de620cbdc38ec51dab0bb0",
+        "android_client_info": {
+          "package_name": "com.melissacasas.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673528245777-rdk84sivpehsebnnrmtlobopg66dortr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJJ6PV2xvW2Zmjf3bINFNNhIqfc37m1S4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673528245777-rdk84sivpehsebnnrmtlobopg66dortr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
