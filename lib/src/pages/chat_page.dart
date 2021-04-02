@@ -98,8 +98,8 @@ class _ChatPageState extends State<ChatPage> {
       child: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('messages').snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData && snapshot == null) {
-            return Text('No tienes ningún mensaje');
+          if (!snapshot.hasData && snapshot.data == null) {
+            return CircularProgressIndicator();
           }
           final List<QueryDocumentSnapshot> messages = snapshot.data.docs;
           final List<Widget> messagesList = [];
@@ -107,9 +107,12 @@ class _ChatPageState extends State<ChatPage> {
           for (var message in messages) {
             final text = message.data()['text'];
             final author = message.data()['author'];
+            final currentUser = loggedUser.email;
+
             final messagesWidget = ChatBubble(
               text: text,
               author: author,
+              isMe: currentUser == author,
             );
             messagesList.add(messagesWidget);
           }
