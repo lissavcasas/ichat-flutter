@@ -13,6 +13,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final messageController = TextEditingController();
   User loggedUser;
   String messageText;
 
@@ -35,32 +36,6 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  // void getMessages() async {
-  //   try {
-  //     final messages = await _firestore.collection('messages').get();
-
-  //     for (var message in messages.docs) {
-  //       print(message.data());
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  void messagesStream() async {
-    try {
-      final messages = _firestore.collection('messages').snapshots();
-
-      await for (var snapshot in messages) {
-        for (var message in snapshot.docs) {
-          print(message.data());
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,21 +46,17 @@ class _ChatPageState extends State<ChatPage> {
           IconButton(
             icon: Icon(Icons.power_settings_new),
             onPressed: () {
-              // getMessages();
-              messagesStream();
-              // _auth.signOut();
-              // // Navigator.pushNamed(context, 'sign_in_page');
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              //   'sign_in_page',
-              //   (route) => false,
-              // );
+              _auth.signOut();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                'sign_in_page',
+                (route) => false,
+              );
             },
           ),
         ],
       ),
       body: Column(
         children: [
-          // Expanded(child: Text('Listado de mensajes')),
           _buildMessagesList(),
           _sendMessageArea(),
         ],
@@ -135,6 +106,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
         Expanded(
           child: TextField(
+            controller: messageController,
             onChanged: (value) {
               messageText = value;
             },
@@ -145,6 +117,7 @@ class _ChatPageState extends State<ChatPage> {
         IconButton(
           icon: Icon(Icons.send),
           onPressed: () {
+            messageController.clear();
             _firestore.collection('messages').add({
               'text': messageText,
               'author': loggedUser.email,
