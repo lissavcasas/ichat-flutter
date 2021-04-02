@@ -1,3 +1,4 @@
+import 'package:chat_app/src/core/styles.dart';
 import 'package:chat_app/src/widgets/chat_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,6 +57,7 @@ class _ChatPageState extends State<ChatPage> {
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildMessagesList(),
           _sendMessageArea(),
@@ -65,34 +67,34 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   _buildMessagesList() {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('messages').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData && snapshot.data == null) {
-            return CircularProgressIndicator();
-          }
-          final List<QueryDocumentSnapshot> messages = snapshot.data.docs;
-          final List<Widget> messagesList = [];
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.collection('messages').orderBy('ts').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData && snapshot.data == null) {
+          return CircularProgressIndicator();
+        }
+        final List<QueryDocumentSnapshot> messages = snapshot.data.docs;
+        final List<Widget> messagesList = [];
 
-          for (var message in messages) {
-            final text = message.data()['text'];
-            final author = message.data()['author'];
-            final currentUser = loggedUser.email;
+        for (var message in messages) {
+          final text = message.data()['text'];
+          final author = message.data()['author'];
+          final currentUser = loggedUser.email;
 
-            final messagesWidget = ChatBubble(
-              text: text,
-              author: author,
-              isMe: currentUser == author,
-            );
-            messagesList.add(messagesWidget);
-          }
-          return ListView(
+          final messagesWidget = ChatBubble(
+            text: text,
+            author: author,
+            isMe: currentUser == author,
+          );
+          messagesList.add(messagesWidget);
+        }
+        return Expanded(
+          child: ListView(
             padding: EdgeInsets.all(20.0),
             children: messagesList,
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -115,12 +117,16 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.send),
+          icon: Icon(
+            Icons.send,
+            color: Styles.primary,
+          ),
           onPressed: () {
             messageController.clear();
             _firestore.collection('messages').add({
               'text': messageText,
               'author': loggedUser.email,
+              'ts': FieldValue.serverTimestamp(),
             });
           },
         ),
