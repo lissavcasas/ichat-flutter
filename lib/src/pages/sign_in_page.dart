@@ -44,6 +44,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
             SizedBox(height: 10),
             CustomTextField(
+              obscureText: true,
               hintText: 'Ingresa tu contraseña',
               onChanged: (value) {
                 password = value;

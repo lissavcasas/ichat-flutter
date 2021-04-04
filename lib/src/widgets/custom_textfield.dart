@@ -4,16 +4,19 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final Function(String) onChanged;
+  final bool obscureText;
 
   const CustomTextField({
     Key key,
     this.hintText,
     this.onChanged,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      obscureText: obscureText,
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
